@@ -1,5 +1,5 @@
 `define abs(a,b) ((a>b) ? a-b : b-a)
-`define in_circle(c) ((square[`abs(x,pos_x[c])] + square[`abs(y,pos_y[c])]) <= square[r[c]])
+`define in_circle(c) ((square[abs(x,pos_x[c])] + square[abs(y,pos_y[c])]) <= square[r[c]])
 
 module SET ( clk , rst, en, central, radius, mode, busy, valid, candidate );
 
@@ -16,7 +16,6 @@ reg [6:0] square [0:8];
 reg [3:0] pos_x [0:2];
 reg [3:0] pos_y [0:2];
 reg [3:0] r [0:2];
-reg [3:0] x, y;
 integer i;
 
 initial begin
@@ -42,24 +41,11 @@ always@(posedge clk, posedge rst)begin
 		else begin
 			busy = 1'd1;
 			case(mode)
-				2'b00 : if(`in_circle(0)) candidate<=candidate+8'd1;
-				2'b01 : if(`in_circle(0)&&`in_circle(1))candidate<=candidate+8'd1;
-				2'b10 : if(`in_circle(0)&&!(`in_circle(1))) candidate<=candidate+8'd1;
-				2'b11 : if((`in_circle(0)&&`in_circle(1))&&(`in_circle(1)&&`in_circle(2))&&(`in_circle(0)&&`in_circle(2))&&!(`in_circle(0)&&`in_circle(1)&&`in_circle(2)));
+				2'b00 : in_circle(0);
+				2'b01 : ;
+				2'b10 : ;
+				2'b11 : ;
 			endcase
-			if(x == 4'd8)begin
-				x <= 4'd0;
-				if(y == 4'd8)begin
-					y <= 4'd0;
-					valid = 1'd1;
-				end
-				else begin
-					y <= y+4'd0;
-				end
-			end
-			else begin
-				x <= x+4'd1;
-			end
 		end
 	end
 end
